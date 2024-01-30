@@ -6,18 +6,19 @@ from ical.calendar_stream import IcsCalendarStream
 import datetime
 import re
 import utils
+from pathlib import Path
 
 
 def convertClassSchduleToIcs(
     firstMonday: datetime.datetime,
-    inputFilePath: str,
-    outputFilePath: str,
-    configFilePath: str,
+    inputFilePath: Path,
+    outputFilePath: Path,
+    configFilePath: Path,
 ):
     classSchedule = ical.calendar.Calendar()
-    with open(inputFilePath, "r", encoding="utf-8") as inputFile:
+    with inputFilePath.open("r", encoding="utf-8") as inputFile:
         classList = json.load(inputFile)["kbList"]
-    with open(configFilePath, "r", encoding="utf-8") as configFile:
+    with configFilePath.open("r", encoding="utf-8") as configFile:
         configs = json.load(configFile)
 
     for class_ in classList:
@@ -67,16 +68,16 @@ def convertClassSchduleToIcs(
             exdate=exceptionDates,
         )
         classSchedule.events.append(classEvent)
-    with open(outputFilePath, "w", encoding="utf-8") as outputFile:
+    with outputFilePath.open("w", encoding="utf-8") as outputFile:
         outputFile.write(IcsCalendarStream.calendar_to_ics(classSchedule))
     return
 
 
 def convertExamSchduleToIcs(
     startDate: datetime.datetime,
-    inputFilePath: str,
-    outputFilePath: str,
-    configFilePath: str,
+    inputFilePath: Path,
+    outputFilePath: Path,
+    configFilePath: Path,
 ):
     # todo
     return
