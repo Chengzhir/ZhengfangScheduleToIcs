@@ -7,7 +7,10 @@ import utils
 
 
 def convertClassSchduleToIcs(
-    firstMonday, inputFilePath, outputFilePath, configFilePath
+    firstMonday: datetime.datetime,
+    inputFilePath: str,
+    outputFilePath: str,
+    configFilePath: str,
 ):
     classSchedule = ical.calendar.Calendar()
     with open(inputFilePath, "r", encoding="utf-8") as inputFile:
@@ -16,7 +19,7 @@ def convertClassSchduleToIcs(
         configs = json.load(configFile)
     print(firstMonday)
     for class_ in classList:
-        weeks = list(
+        weekRanges = list(
             map(
                 lambda s: list(
                     map(int, ([item for item in re.split("-|周", s) if item]))
@@ -24,16 +27,16 @@ def convertClassSchduleToIcs(
                 class_["zcd"].split(","),
             )
         )
-        # print(weeks)
+        # print(weekRanges)
         startTime = utils.convertToDatetime(
             firstMonday,
-            weeks[0][0],
+            weekRanges[0][0],
             int(class_["xqj"]),
             configs["timetable"][class_["jcor"].split("-")[0]].split("-")[0],
         )
         endTime = utils.convertToDatetime(
             firstMonday,
-            weeks[0][0],
+            weekRanges[0][0],
             int(class_["xqj"]),
             configs["timetable"][class_["jcor"].split("-")[-1]].split("-")[-1],
         )

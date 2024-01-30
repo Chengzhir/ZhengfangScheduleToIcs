@@ -5,6 +5,11 @@ import datetime
 import utils
 
 
-def convertExamSchduleToIcs(startDate, inputFilePath, outputFilePath, configFilePath):
+def convertExamSchduleToIcs(
+    startDate: datetime.datetime,
+    inputFilePath: str,
+    outputFilePath: str,
+    configFilePath: str,
+):
     # to do
     return
