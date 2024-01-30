@@ -13,6 +13,6 @@ def convertToDatetime(
 
 
 def convertToDate(firstMonday: datetime.datetime, weekNumber: int, dayOfWeek: int):
-    return datetime.date(firstMonday) + datetime.timedelta(
+    return firstMonday.date() + datetime.timedelta(
         weeks=weekNumber - 1, days=dayOfWeek - 1
     )

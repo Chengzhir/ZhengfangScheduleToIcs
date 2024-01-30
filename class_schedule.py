@@ -1,6 +1,8 @@
 import json
 import ical.calendar
 import ical.event
+import ical.types
+from ical.calendar_stream import IcsCalendarStream
 import datetime
 import re
 import utils
@@ -17,7 +19,7 @@ def convertClassSchduleToIcs(
         classList = json.load(inputFile)["kbList"]
     with open(configFilePath, "r", encoding="utf-8") as configFile:
         configs = json.load(configFile)
-    print(firstMonday)
+    # print(firstMonday)
     for class_ in classList:
         weekRanges = list(
             map(
@@ -41,35 +43,55 @@ def convertClassSchduleToIcs(
             configs["timetable"][class_["jcor"].split("-")[-1]].split("-")[-1],
         )
 
-        recurringDates = []
+        # recurringDates = []
+        # for weekRange in weekRanges:
+        #     if len(weekRange) == 1:
+        #         recurringDates.append(
+        #             utils.convertToDate(
+        #                 firstMonday,
+        #                 weekRange[0],
+        #                 int(class_["xqj"]),
+        #             )
+        #         )
+        #     elif len(weekRange) == 2:
+        #         for week in range(weekRange[0], weekRange[1] + 1):
+        #             recurringDates.append(
+        #                 utils.convertToDate(
+        #                     firstMonday,
+        #                     week,
+        #                     int(class_["xqj"]),
+        #                 )
+        #             )
+        #     else:
+        #         print("weekRange异常")
+        #         exit(1)
+
+        weekNumbers = set()
         for weekRange in weekRanges:
-            if len(weekRange) == 1:
-                recurringDates.append(
-                    utils.convertToDate(
-                        firstMonday,
-                        weekRange[0],
-                        int(class_["xqj"]),
-                    )
+            weekNumbers = weekNumbers.union(set(range(weekRange[0], weekRange[-1] + 1)))
+        recurringRule = ical.types.Recur(
+            freq=ical.types.Frequency.WEEKLY,
+            count=weekRanges[-1][-1] - weekRanges[0][0] + 1,
+            interval=1,
+        )
+        exceptionDates = []
+        for weekNumber in range(weekRanges[0][0], weekRanges[-1][-1]):
+            if weekNumber not in weekNumbers:
+                exceptionDates.append(
+                    utils.convertToDate(firstMonday, weekNumber, int(class_["xqj"]))
                 )
-            elif len(weekRange) == 2:
-                for week in range(weekRange[0], weekRange[1] + 1):
-                    recurringDates.append(
-                        utils.convertToDate(
-                            firstMonday,
-                            weekRange[0],
-                            int(class_["xqj"]),
-                        )
-                    )
-            else:
-                print("weekRange异常")
-                exit(1)
 
         classEvent = ical.event.Event(
             dtstart=startTime,
             dtend=endTime,
             summary=class_["kcmc"],
             description=class_["xm"],
-            location=class_["xqmc"] + class_["cdmc"],
-            rdate=recurringDates,
+            location=class_["xqmc"] + " " + class_["cdmc"],
+            # rdate=recurringDates,
+            rrule=recurringRule,
+            exdate=exceptionDates,
         )
         classSchedule.events.append(classEvent)
+    with open(outputFilePath, "w", encoding="utf-8") as outputFile:
+        outputFile.write(IcsCalendarStream.calendar_to_ics(classSchedule))
+    return
