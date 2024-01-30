@@ -1,6 +1,8 @@
 import json
-import ics
+import ical.calendar
+import ical.event
 import datetime
+import utils
 
 
 def convertExamSchduleToIcs(startDate, inputFilePath, outputFilePath, configFilePath):
