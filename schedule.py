@@ -78,5 +78,5 @@ def convertExamSchduleToIcs(
     outputFilePath: str,
     configFilePath: str,
 ):
-    # to do
+    # todo
     return
