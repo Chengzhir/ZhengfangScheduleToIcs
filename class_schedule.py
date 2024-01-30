@@ -41,10 +41,35 @@ def convertClassSchduleToIcs(
             configs["timetable"][class_["jcor"].split("-")[-1]].split("-")[-1],
         )
 
+        recurringDates = []
+        for weekRange in weekRanges:
+            if len(weekRange) == 1:
+                recurringDates.append(
+                    utils.convertToDate(
+                        firstMonday,
+                        weekRange[0],
+                        int(class_["xqj"]),
+                    )
+                )
+            elif len(weekRange) == 2:
+                for week in range(weekRange[0], weekRange[1] + 1):
+                    recurringDates.append(
+                        utils.convertToDate(
+                            firstMonday,
+                            weekRange[0],
+                            int(class_["xqj"]),
+                        )
+                    )
+            else:
+                print("weekRange异常")
+                exit(1)
+
         classEvent = ical.event.Event(
             dtstart=startTime,
             dtend=endTime,
             summary=class_["kcmc"],
             description=class_["xm"],
             location=class_["xqmc"] + class_["cdmc"],
+            rdate=recurringDates,
         )
+        classSchedule.events.append(classEvent)
