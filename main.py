@@ -1,5 +1,4 @@
-import class_schedule
-import exam_schedule
+import schedule
 import datetime
 import tzlocal
 
@@ -14,10 +13,10 @@ if __name__ == "__main__":
     configFilePath = r".\config.json"
     match type:
         case 1:
-            class_schedule.convertClassSchduleToIcs(
+            schedule.convertClassSchduleToIcs(
                 firstMonday, inputFilePath, outputFilePath, configFilePath
             )
         case 2:
-            exam_schedule.convertExamSchduleToIcs(
+            schedule.convertExamSchduleToIcs(
                 firstMonday, inputFilePath, outputFilePath, configFilePath
             )

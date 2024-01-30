@@ -95,3 +95,13 @@ def convertClassSchduleToIcs(
     with open(outputFilePath, "w", encoding="utf-8") as outputFile:
         outputFile.write(IcsCalendarStream.calendar_to_ics(classSchedule))
     return
+
+
+def convertExamSchduleToIcs(
+    startDate: datetime.datetime,
+    inputFilePath: str,
+    outputFilePath: str,
+    configFilePath: str,
+):
+    # to do
+    return
