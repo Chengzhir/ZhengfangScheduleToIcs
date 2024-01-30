@@ -3,7 +3,7 @@ import datetime
 import tzlocal
 
 if __name__ == "__main__":
-    type = int(input("请选择需要转换成日历的内容类型编号（1. 课表 2. 考试）："))
+    type = int(input("请选择需要转换成日历的内容类型编号（1. 课表 2. 考试（未完成））："))
     firstMonday = datetime.datetime.strptime(
         input("请输入该学期第一周周一的日期（格式为年-月-日）："), "%Y-%m-%d"
     )
