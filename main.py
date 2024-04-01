@@ -22,7 +22,7 @@ if __name__ == "__main__":
         choices=["class", "exam"],
         required=True,
         help="需要转换的事件类别（class或exam）",
-    )
+    )   
     parser.add_argument(
         "-f",
         "--first-Monday",
