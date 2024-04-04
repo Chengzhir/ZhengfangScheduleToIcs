@@ -36,7 +36,7 @@ python main.py -t <type> -f <first_Monday> -i <input> -o <output> -c <config>
 -   [ ] 考试信息转 ics
 -   [ ] 输入账号密码自动导出 ics
 -   [ ] 尝试把代码写得不那么 💩
--   [ ]考虑集成 getjson
+-   [ ] 考虑集成 getjson
 
 What 's New
 
