@@ -17,11 +17,11 @@ def convertClassSchduleToIcs(
 ):
     # 创建一个空的日历对象
     classSchedule = ical.calendar.Calendar()
-    
+
     # 读取输入的JSON文件并解析课程列表
     with inputFilePath.open("r", encoding="utf-8") as inputFile:
         classList = json.load(inputFile)["kbList"]
-    
+
     # 读取配置文件，获取相关配置信息
     with configFilePath.open("r", encoding="utf-8") as configFile:
         configs = json.load(configFile)
@@ -37,7 +37,7 @@ def convertClassSchduleToIcs(
                 class_["zcd"].split(","),
             )
         )
-        
+
         # 计算课程开始时间和结束时间
         startTime = utils.convertToDatetime(
             firstMonday,
@@ -79,19 +79,35 @@ def convertClassSchduleToIcs(
             exdate=exceptionDates,
         )
         classSchedule.events.append(classEvent)
-    
+
     # 将日历对象转换为ICS格式并写入输出文件
     with outputFilePath.open("w", encoding="utf-8") as outputFile:
         outputFile.write(IcsCalendarStream.calendar_to_ics(classSchedule))
-    
+
     return
 
 
 def convertExamSchduleToIcs(
-    startDate: datetime.datetime,
     inputFilePath: Path,
     outputFilePath: Path,
     configFilePath: Path,
 ):
-    # todo
-    return
+    examSchedule = ical.calendar.Calendar()
+    with inputFilePath.open("r", encoding="utf-8") as inputFile:
+        examList = json.load(inputFile)["items"]
+    with configFilePath.open("r", encoding="utf-8") as configFile:
+        configs = json.load(configFile)
+
+    for exam in examList:
+        startTime, endTime = utils.getTimeRange(exam["kssj"])
+
+        examEvent = ical.event.Event(
+            dtstart=startTime,
+            dtend=endTime,
+            summary=exam["kcmc"] + "：" + exam["ksmc"],
+            location=exam["cdxqmc"][:-2] + " " + exam["cdmc"] + " " + exam["zwh"],
+        )
+        examSchedule.events.append(examEvent)
+
+        with outputFilePath.open("w", encoding="utf-8") as outputFile:
+            outputFile.write(IcsCalendarStream.calendar_to_ics(examSchedule))

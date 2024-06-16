@@ -22,11 +22,11 @@ if __name__ == "__main__":
         choices=["class", "exam"],
         required=True,
         help="需要转换的事件类别（class或exam）",
-    )   
+    )
     parser.add_argument(
         "-f",
         "--first-Monday",
-        required=True,
+        # required=True,
         type=lambda s: datetime.datetime.strptime(s, "%Y-%m-%d").replace(
             tzinfo=tzlocal.get_localzone()
         ),
@@ -61,6 +61,4 @@ if __name__ == "__main__":
                 args.first_Monday, args.input, args.output, args.config
             )
         case "exam":
-            schedule.convertExamSchduleToIcs(
-                args.first_Monday, args.input, args.output, args.config
-            )
+            schedule.convertExamSchduleToIcs(args.input, args.output, args.config)
