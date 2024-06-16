@@ -74,7 +74,7 @@ def convertClassSchduleToIcs(
             dtend=endTime,
             summary=class_["kcmc"],
             description=class_["xm"],
-            location=class_["xqmc"] + " " + class_["cdmc"],
+            location=class_["xqmc"][:-2] + " " + class_["cdmc"],
             rrule=recurringRule,
             exdate=exceptionDates,
         )
