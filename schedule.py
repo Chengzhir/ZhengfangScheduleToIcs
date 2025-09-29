@@ -29,40 +29,36 @@ def convertClassSchduleToIcs(
     # 遍历课程列表，将每个课程转换为日历事件
     for class_ in classList:
         # 解析周次范围
-        weekRanges = list(
-            map(
-                lambda s: list(
-                    map(int, ([item for item in re.split("-|周", s) if item]))
-                ),
-                class_["zcd"].split(","),
-            )
-        )
+        weekNumbers = utils.parse_week_string(class_["zcd"])
+        if not weekNumbers:
+            continue
+
+        sorted_weeks = sorted(list(weekNumbers))
+        first_week = sorted_weeks[0]
+        last_week = sorted_weeks[-1]
 
         # 计算课程开始时间和结束时间
         startTime = utils.convertToDatetime(
             firstMonday,
-            weekRanges[0][0],
+            first_week,
             int(class_["xqj"]),
             configs["timetable"][class_["jcor"].split("-")[0]].split("-")[0],
         )
         endTime = utils.convertToDatetime(
             firstMonday,
-            weekRanges[0][0],
+            first_week,
             int(class_["xqj"]),
             configs["timetable"][class_["jcor"].split("-")[-1]].split("-")[-1],
         )
 
         # 计算需要排除的日期，即非上课周次对应的日期
-        weekNumbers = set()
-        for weekRange in weekRanges:
-            weekNumbers = weekNumbers.union(set(range(weekRange[0], weekRange[-1] + 1)))
         recurringRule = ical.types.Recur(
             freq=ical.types.Frequency.WEEKLY,
-            count=weekRanges[-1][-1] - weekRanges[0][0] + 1,
+            count=last_week - first_week + 1,
             interval=1,
         )
         exceptionDates = []
-        for weekNumber in range(weekRanges[0][0], weekRanges[-1][-1]):
+        for weekNumber in range(first_week, last_week + 1):
             if weekNumber not in weekNumbers:
                 exceptionDates.append(
                     utils.convertToDate(firstMonday, weekNumber, int(class_["xqj"]))

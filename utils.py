@@ -2,6 +2,51 @@ import datetime
 import re
 
 
+def parse_week_string(zcd: str) -> set[int]:
+    """
+    解析周次字符串，支持单双周。
+
+    Args:
+        zcd (str): 周次字符串, e.g., "4-5周,7-17周(单)".
+
+    Returns:
+        set[int]: 包含所有上课周次的集合。
+    """
+    week_numbers = set()
+    parts = zcd.split(",")
+    for part in parts:
+        part = part.strip()
+        is_odd = "(单)" in part
+        is_even = "(双)" in part
+
+        # 移除周、(单)、(双)等非数字部分
+        part_digits_str = re.sub(r"周|\(单\)|\(双\)", "", part)
+
+        # 解析范围或单个数字
+        if "-" in part_digits_str:
+            try:
+                start, end = map(int, part_digits_str.split("-"))
+                for i in range(start, end + 1):
+                    if is_odd and i % 2 != 0:
+                        week_numbers.add(i)
+                    elif is_even and i % 2 == 0:
+                        week_numbers.add(i)
+                    elif not is_odd and not is_even:
+                        week_numbers.add(i)
+            except ValueError:
+                # 处理像 "7-" 这样的无效范围
+                print(f"周长度(zcd={zcd})无效")
+                continue
+        elif part_digits_str:
+            try:
+                week_numbers.add(int(part_digits_str))
+            except ValueError:
+                print(f"周长度(zcd={zcd})无效")
+                continue
+
+    return week_numbers
+
+
 def convertToDatetime(
     firstMonday: datetime.datetime, weekNumber: int, dayOfWeek: int, time: str
 ):
