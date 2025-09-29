@@ -1,13 +1,13 @@
 # 正方教务课表转 ics
 
-本项目仅为满足个人需要+练手，代码一坨且没注释，别骂（
+本项目仅为满足个人需要+练手，代码一坨且注释也不全，别骂（
 
 ## 使用方法
 
 ### 安装
 
 ```
-git clone https://github.com/your_username/your_repository.git
+git clone https://github.com/Chengzhir/ZhengfangScheduleToIcs
 ```
 
 ### 安装依赖
@@ -27,19 +27,12 @@ python main.py -t <type> -f <first_Monday> -i <input> -o <output> -c <config>
     -c --config：指定配置文件的路径，默认为当前目录下的 `config.json`。
 ```
 
--   在正方教务课表页面点击查询，自行保存其响应的带有课表信息的 json。此处可以使用 getjson 工具（修改 url 即可）
+-   在正方教务课表页面点击查询，自行保存其响应的带有课表信息的 json。此处可以使用 getjson 工具（目前还未实现）
 
 -   根据提示输入需要的信息，然后 ics 文件就导出来了...
 
 ## 待完成列表
 
--   [ ] 考试信息转 ics
--   [ ] 输入账号密码自动导出 ics
+-   [x] 考试信息转 ics
+-   [ ] 输入账号密码登录后自动获取课表信息的json并导出ics文件
 -   [ ] 尝试把代码写得不那么 💩
--   [ ] 考虑集成 getjson
-
-What 's New
-
--   给代码添加了注释
--   新增 getjson 功能，便于获取 json 响应数据
--   计划进一步添加功能，整理代码
